@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Overlay Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      color: #0f0;
+    }
+    .calculator {
+      position: relative;
+      width: 320px;
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    .display {
+      background: #000;
+      color: #0f0;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 1.3rem;
+      min-height: 60px;
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+    button {
+      padding: 18px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #444;
+    }
+    button.operator {
+      background: #ff9500;
+    }
+    button.equal {
+      background: #28a745;
+      grid-column: span 2;
+    }
+    button.clear {
+      background: #dc3545;
+    }
+
+    /* Overlay container for typing message */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      color: #0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      border-radius: 12px;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 10;
+      text-align: center;
+      white-space: pre-wrap;
+      font-size: 1.2rem;
+    }
+    .overlay.visible {
+      visibility: visible;
+      opacity: 1;
+    }
+    .overlay .cursor {
+      display: inline-block;
+      width: 8px;
+      background-color: #0f0;
+      margin-left: 2px;
+      animation: blink 0.7s steps(1) infinite;
+    }
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="deleteLast()">DEL</button>
+      <button onclick="append('%')">%</button>
+      <button class="operator" onclick="append('/')">÷</button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button class="operator" onclick="append('*')">×</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button class="operator" onclick="append('-')">−</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button class="operator" onclick="append('+')">+</button>
+
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
+
+    <div class="overlay" id="overlay">
+      <span id="message"></span><span class="cursor" id="cursor"></span>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const overlay = document.getElementById("overlay");
+    const messageEl = document.getElementById("message");
+    const cursorEl = document.getElementById("cursor");
+
+    function append(val) {
+      if (display.textContent === "0") {
+        display.textContent = val;
+      } else {
+        display.textContent += val;
+      }
+    }
+
+    function clearDisplay() {
+      display.textContent = "0";
+    }
+
+    function deleteLast() {
+      let txt = display.textContent;
+      display.textContent = txt.slice(0, -1);
+      if (display.textContent === "") {
+        display.textContent = "0";
+      }
+    }
+
+    function calculate() {
+      const msg = `Oh oh oh
+Nandito ako umiibig sa'yo
+Kahit na nagdurugo ang puso
+At kung sakaling iwanan ka niya
+'Wag kang mag-alala
+May nagmamahal sa'yo
+Nandito ako
+Oh woah oh oh
+Sino ang iibigin
+Sino ang iibigin
+Oh woah oh oh
+Sino ang iibigin`;
+
+      // show overlay
+      overlay.classList.add("visible");
+      messageEl.textContent = "";
+
+      // type text
+      let idx = 0;
+      const speed = 50; // in ms
+      const typ = setInterval(() => {
+        if (idx < msg.length) {
+          // append one char
+          messageEl.textContent += msg[idx];
+          idx++;
+        } else {
+          clearInterval(typ);
+          cursorEl.style.display = "none";
+        }
+      }, speed);
+    }
+  </script>
+</body>
+</html>
