@@ -1,5 +1,5 @@
 body {
-   background-image: url(./img/background\ 3.jpg);
+   background-image: url(background 3.jpg);
    background-size: cover;
    display: flex;
    justify-content: center;
@@ -79,3 +79,4 @@ body {
 .btn:nth-child(20):hover {
     background-color: #312e2e;
 }
+
